@@ -3,6 +3,9 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    # Suppress PHP deprecated warnings for Laravel Sanctum compatibility
+    php_value error_reporting "E_ALL & ~E_DEPRECATED"
+
     RewriteEngine On
 
     # Handle Authorization Header

@@ -1,5 +1,8 @@
 <?php
 
+// Suppress deprecated warnings for Laravel Sanctum PHP 8.4 compatibility
+ini_set('error_reporting', E_ALL & ~E_DEPRECATED);
+
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 

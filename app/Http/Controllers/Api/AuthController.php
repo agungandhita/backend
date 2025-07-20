@@ -24,6 +24,7 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'kelas' => 'nullable|string|max:50',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -34,12 +35,20 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::create([
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'kelas' => $request->kelas,
-        ]);
+        ];
+
+        // Handle file upload
+        if ($request->hasFile('foto')) {
+            $userData['foto'] = $request->file('foto')->store('users', 'public');
+        }
+
+        $user = User::create($userData);
+        $user->refresh(); // Refresh model to ensure traits are properly loaded
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
