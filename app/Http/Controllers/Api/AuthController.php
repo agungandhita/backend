@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,89 +21,95 @@ class AuthController extends Controller
     /**
      * Register a new user
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'kelas' => 'nullable|string|max:50',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            $userData = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'kelas' => $request->kelas,
+                'phone' => $request->phone,
+                'bio' => $request->bio,
+                'is_active' => true,
+            ];
 
-        if ($validator->fails()) {
+            // Handle file upload
+            if ($request->hasFile('foto')) {
+                $fileUploadService = new FileUploadService();
+                $userData['foto'] = $fileUploadService->uploadImage(
+                    $request->file('foto'),
+                    'profiles'
+                );
+            }
+
+            $user = User::create($userData);
+            $user->refresh(); // Refresh model to ensure traits are properly loaded
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User registered successfully',
+                'data' => [
+                    'user' => new UserResource($user),
+                    'token' => $token,
+                    'token_type' => 'Bearer'
+                ]
+            ], 201);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 422);
+                'message' => 'Registration failed',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $userData = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'kelas' => $request->kelas,
-        ];
-
-        // Handle file upload
-        if ($request->hasFile('foto')) {
-            $userData['foto'] = $request->file('foto')->store('users', 'public');
-        }
-
-        $user = User::create($userData);
-        $user->refresh(); // Refresh model to ensure traits are properly loaded
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'User registered successfully',
-            'data' => [
-                'user' => new UserResource($user),
-                'token' => $token,
-                'token_type' => 'Bearer'
-            ]
-        ], 201);
     }
 
     /**
      * Login user
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+        try {
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid credentials'
+                ], 401);
+            }
 
-        if ($validator->fails()) {
+            $user = Auth::user();
+            
+            // Check if user is active
+            if (!$user->is_active) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Account is deactivated'
+                ], 403);
+            }
+            
+            // Update last login timestamp
+            $user->updateLastLogin();
+            
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Login successful',
+                'data' => [
+                    'user' => new UserResource($user),
+                    'token' => $token,
+                    'token_type' => 'Bearer'
+                ]
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 422);
+                'message' => 'Login failed',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid credentials'
-            ], 401);
-        }
-
-        $user = Auth::user();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Login successful',
-            'data' => [
-                'user' => new UserResource($user),
-                'token' => $token,
-                'token_type' => 'Bearer'
-            ]
-        ]);
     }
 
     /**
@@ -135,53 +145,45 @@ class AuthController extends Controller
     /**
      * Update user profile
      */
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateProfileRequest $request)
     {
-        $user = $request->user();
+        try {
+            $user = $request->user();
+            $fileUploadService = new FileUploadService();
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|string|max:255',
-            'kelas' => 'sometimes|nullable|string|max:50',
-            'foto' => 'sometimes|nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+            // Update user data
+            $user->fill($request->only(['name', 'email', 'kelas', 'phone', 'bio']));
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+            // Handle photo upload
+            if ($request->hasFile('foto')) {
+                // Delete old photo if exists
+                if ($user->foto) {
+                    $fileUploadService->deleteFile($user->foto, 'profiles');
+                }
 
-        // Update user data
-        if ($request->has('name')) {
-            $user->name = $request->name;
-        }
-        if ($request->has('kelas')) {
-            $user->kelas = $request->kelas;
-        }
-
-        // Handle photo upload
-        if ($request->hasFile('foto')) {
-            // Delete old photo if exists
-            if ($user->foto && Storage::disk('public')->exists($user->foto)) {
-                Storage::disk('public')->delete($user->foto);
+                // Store new photo
+                $user->foto = $fileUploadService->uploadImage(
+                    $request->file('foto'),
+                    'profiles'
+                );
             }
 
-            // Store new photo
-            $path = $request->file('foto')->store('users', 'public');
-            $user->foto = $path;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile updated successfully',
+                'data' => [
+                    'user' => new UserResource($user)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update profile',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $user->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Profile updated successfully',
-            'data' => [
-                'user' => new UserResource($user)
-            ]
-        ]);
     }
 
     /**

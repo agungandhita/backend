@@ -3,28 +3,36 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="p-4">
-    <!-- Header Dashboard -->
-    <div class="mb-4">
-        <h1 class="h2 fw-bold text-dark">Dashboard</h1>
-        <p class="text-muted">Selamat datang di panel admin Ensiklopedia Alat Teknik SMK</p>
+<div class="container-fluid p-4">
+    {{-- Header Dashboard --}}
+    <div class="mb-5">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="h2 fw-bold text-dark mb-1">Dashboard</h1>
+                <p class="text-muted mb-0">Selamat datang di panel admin Ensiklopedia Alat Teknik SMK</p>
+            </div>
+            <div class="col-auto">
+                <small class="text-muted">{{ now()->format('d F Y, H:i') }}</small>
+            </div>
+        </div>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 shadow-sm">
+    {{-- Statistics Cards --}}
+    <div class="row g-4 mb-5">
+        {{-- Total Users Card --}}
+        <div class="col-12 col-md-6 col-xl-2">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div>
+                        <div class="flex-grow-1">
                             <p class="small fw-medium text-muted mb-1">Total Users</p>
-                            <p class="h3 fw-bold mb-2">{{ $stats['total_users'] ?? 0 }}</p>
-                            <div class="d-flex gap-1">
+                            <h3 class="fw-bold mb-2 text-primary">{{ $stats['total_users'] ?? 0 }}</h3>
+                            <div class="d-flex flex-wrap gap-1">
                                 <span class="badge bg-primary">Siswa: {{ $stats['total_students'] ?? 0 }}</span>
                                 <span class="badge bg-info">Admin: {{ $stats['total_admins'] ?? 0 }}</span>
                             </div>
                         </div>
-                        <div class="bg-primary bg-opacity-10 rounded p-3">
+                        <div class="bg-primary bg-opacity-10 rounded-3 p-3">
                             <i class="fas fa-users text-primary fs-4"></i>
                         </div>
                     </div>
@@ -32,18 +40,40 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 shadow-sm">
+        {{-- Categories Card --}}
+        <div class="col-12 col-md-6 col-xl-2">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <p class="small fw-medium text-muted mb-1">Tools Teknik</p>
-                            <p class="h3 fw-bold mb-2">{{ $stats['total_tools'] ?? 0 }}</p>
-                            <div class="d-flex gap-1">
-                                <span class="badge bg-success">Alat Teknik</span>
+                        <div class="flex-grow-1">
+                            <p class="small fw-medium text-muted mb-1">Kategori</p>
+                            <h3 class="fw-bold mb-2 text-secondary">{{ $stats['total_categories'] ?? 0 }}</h3>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-secondary">Total Kategori</span>
                             </div>
                         </div>
-                        <div class="bg-success bg-opacity-10 rounded p-3">
+                        <div class="bg-secondary bg-opacity-10 rounded-3 p-3">
+                            <i class="fas fa-tags text-secondary fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Tools Card --}}
+        <div class="col-12 col-md-6 col-xl-2">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <p class="small fw-medium text-muted mb-1">Tools Teknik</p>
+                            <h3 class="fw-bold mb-2 text-success">{{ $stats['total_tools'] ?? 0 }}</h3>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-success">Aktif: {{ $stats['active_tools'] ?? 0 }}</span>
+                                <span class="badge bg-warning text-dark">Unggulan: {{ $stats['featured_tools'] ?? 0 }}</span>
+                            </div>
+                        </div>
+                        <div class="bg-success bg-opacity-10 rounded-3 p-3">
                             <i class="fas fa-tools text-success fs-4"></i>
                         </div>
                     </div>
@@ -51,18 +81,19 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 shadow-sm">
+        {{-- Videos Card --}}
+        <div class="col-12 col-md-6 col-xl-2">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div>
+                        <div class="flex-grow-1">
                             <p class="small fw-medium text-muted mb-1">Video Pembelajaran</p>
-                            <p class="h3 fw-bold mb-2">{{ $stats['total_videos'] ?? 0 }}</p>
-                            <div class="d-flex gap-1">
+                            <h3 class="fw-bold mb-2 text-info">{{ $stats['total_videos'] ?? 0 }}</h3>
+                            <div class="d-flex flex-wrap gap-1">
                                 <span class="badge bg-info">Tutorial</span>
                             </div>
                         </div>
-                        <div class="bg-info bg-opacity-10 rounded p-3">
+                        <div class="bg-info bg-opacity-10 rounded-3 p-3">
                             <i class="fas fa-play-circle text-info fs-4"></i>
                         </div>
                     </div>
@@ -70,20 +101,21 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 shadow-sm">
+        {{-- Quizzes Card --}}
+        <div class="col-12 col-md-6 col-xl-2">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
-                        <div>
+                        <div class="flex-grow-1">
                             <p class="small fw-medium text-muted mb-1">Total Kuis</p>
-                            <p class="h3 fw-bold mb-2">{{ $stats['total_quizzes'] ?? 0 }}</p>
-                            <div class="d-flex gap-1">
-                                <span class="badge bg-warning text-dark">Mudah: {{ $stats['quiz_by_level']['mudah'] ?? 0 }}</span>
-                                <span class="badge bg-orange text-white">Sedang: {{ $stats['quiz_by_level']['sedang'] ?? 0 }}</span>
+                            <h3 class="fw-bold mb-2 text-warning">{{ $stats['total_quizzes'] ?? 0 }}</h3>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-success">Mudah: {{ $stats['quiz_by_level']['mudah'] ?? 0 }}</span>
+                                <span class="badge bg-warning text-dark">Sedang: {{ $stats['quiz_by_level']['sedang'] ?? 0 }}</span>
                                 <span class="badge bg-danger">Sulit: {{ $stats['quiz_by_level']['sulit'] ?? 0 }}</span>
                             </div>
                         </div>
-                        <div class="bg-warning bg-opacity-10 rounded p-3">
+                        <div class="bg-warning bg-opacity-10 rounded-3 p-3">
                             <i class="fas fa-question-circle text-warning fs-4"></i>
                         </div>
                     </div>
@@ -92,12 +124,16 @@
         </div>
     </div>
 
-    <!-- Recent Content -->
-    <div class="row g-3">
+    {{-- Recent Content Section --}}
+    <div class="row g-4 mb-5">
+        {{-- Recent Tools --}}
         <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0">
-                    <h5 class="card-title mb-0">Alat Teknik Terbaru</h5>
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="card-title mb-0 fw-bold">Alat Teknik Terbaru</h5>
+                        <i class="fas fa-tools text-muted"></i>
+                    </div>
                 </div>
                 <div class="card-body">
                     @if(isset($stats['recent_tools']) && $stats['recent_tools']->count() > 0)
@@ -132,10 +168,14 @@
             </div>
         </div>
 
+        {{-- Learning Statistics --}}
         <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0">
-                    <h5 class="card-title mb-0">Statistik Pembelajaran</h5>
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="card-title mb-0 fw-bold">Statistik Pembelajaran</h5>
+                        <i class="fas fa-chart-line text-muted"></i>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between mb-3">
@@ -156,12 +196,16 @@
 
     </div>
 
-    <!-- Recent Scores Section -->
-    <div class="row g-3">
+    {{-- Recent Scores Section --}}
+    <div class="row g-4">
+        {{-- Recent Scores Table --}}
         <div class="col-12 col-lg-8">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white border-bottom">
-                    <h5 class="card-title mb-0">Skor Terbaru</h5>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="card-title mb-0 fw-bold">Skor Terbaru</h5>
+                        <i class="fas fa-trophy text-muted"></i>
+                    </div>
                 </div>
                 <div class="card-body">
                     @if(isset($stats['recent_scores']) && $stats['recent_scores']->count() > 0)
@@ -236,10 +280,14 @@
             </div>
         </div>
 
+        {{-- Score Statistics --}}
         <div class="col-12 col-lg-4">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-white border-bottom">
-                    <h5 class="card-title mb-0">Statistik Skor</h5>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="card-title mb-0 fw-bold">Statistik Skor</h5>
+                        <i class="fas fa-chart-bar text-muted"></i>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -275,7 +323,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="small text-muted">Level Sulit</span>
                             <span class="badge bg-danger">{{ $stats['quiz_by_level']['sulit'] ?? 0 }}</span>

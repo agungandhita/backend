@@ -24,6 +24,10 @@ class User extends Authenticatable
         'kelas',
         'foto',
         'role',
+        'phone',
+        'bio',
+        'is_active',
+        'last_login_at'
     ];
 
     /**
@@ -44,6 +48,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_active' => 'boolean',
+        'last_login_at' => 'datetime'
     ];
 
     /**
@@ -52,6 +58,38 @@ class User extends Authenticatable
     public function scores()
     {
         return $this->hasMany(Score::class);
+    }
+
+    /**
+     * Relasi ke Favorites
+     */
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    /**
+     * Relasi ke Tools melalui Favorites
+     */
+    public function favoriteTools()
+    {
+        return $this->belongsToMany(Tool::class, 'favorites');
+    }
+
+    /**
+     * Check if user has favorited a tool
+     */
+    public function hasFavorited($toolId)
+    {
+        return $this->favorites()->where('tool_id', $toolId)->exists();
+    }
+
+    /**
+     * Update last login timestamp
+     */
+    public function updateLastLogin()
+    {
+        $this->update(['last_login_at' => now()]);
     }
 
     /**

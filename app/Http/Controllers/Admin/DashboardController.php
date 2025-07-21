@@ -8,6 +8,7 @@ use App\Models\Tool;
 use App\Models\Video;
 use App\Models\Quiz;
 use App\Models\Score;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -21,7 +22,10 @@ class DashboardController extends Controller
             'total_users' => User::count(),
             'total_students' => User::where('role', 'siswa')->count(),
             'total_admins' => User::where('role', 'admin')->count(),
+            'total_categories' => Category::count(),
             'total_tools' => Tool::count(),
+            'active_tools' => Tool::where('is_active', true)->count(),
+            'featured_tools' => Tool::where('is_featured', true)->count(),
             'total_videos' => Video::count(),
             'total_quizzes' => Quiz::count(),
             'total_scores' => Score::count(),

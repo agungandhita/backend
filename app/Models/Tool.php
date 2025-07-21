@@ -15,11 +15,70 @@ class Tool extends Model
         'deskripsi',
         'fungsi',
         'url_video',
-        'file_pdf'
+        'file_pdf',
+        'kategori',
+        'views_count',
+        'is_featured',
+        'is_active',
+        'tags',
+        'category_id'
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
+        'tags' => 'array',
+        'views_count' => 'integer'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites');
+    }
+
+    public function incrementViews()
+    {
+        $this->increment('views_count');
+    }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopePopular($query)
+    {
+        return $query->orderBy('views_count', 'desc');
+    }
+
+    public function scopeByCategory($query, $categoryId)
+    {
+        return $query->where('category_id', $categoryId);
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function($q) use ($search) {
+            $q->where('nama', 'LIKE', "%{$search}%")
+              ->orWhere('deskripsi', 'LIKE', "%{$search}%")
+              ->orWhere('fungsi', 'LIKE', "%{$search}%");
+        });
+    }
 }

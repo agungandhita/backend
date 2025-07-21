@@ -11,22 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tools', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('gambar')->nullable();
-            $table->text('deskripsi');
-            $table->text('fungsi');
-            $table->string('url_video')->nullable();
-            $table->string('file_pdf')->nullable();
+            $table->string('slug')->unique();
+            $table->text('deskripsi')->nullable();
+            $table->string('icon')->nullable();
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('tools');
+        Schema::dropIfExists('categories');
     }
 };

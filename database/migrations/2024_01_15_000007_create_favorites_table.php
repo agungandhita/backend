@@ -11,22 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tools', function (Blueprint $table) {
+        Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('gambar')->nullable();
-            $table->text('deskripsi');
-            $table->text('fungsi');
-            $table->string('url_video')->nullable();
-            $table->string('file_pdf')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('tool_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+            $table->unique(['user_id', 'tool_id']);
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('tools');
+        Schema::dropIfExists('favorites');
     }
 };

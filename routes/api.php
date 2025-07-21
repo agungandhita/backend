@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\ToolController;
 use App\Http\Controllers\Api\VideoController;
 use App\Http\Controllers\Api\QuizController;
 use App\Http\Controllers\Api\ScoreController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,23 +34,37 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
     Route::put('/profile', [AuthController::class, 'updateProfile']);
     Route::put('/change-password', [AuthController::class, 'changePassword']);
+
+    // Categories routes
+    Route::apiResource('categories', CategoryController::class);
     
     // Tools routes
     Route::apiResource('tools', ToolController::class);
+    Route::get('/tools/featured/list', [ToolController::class, 'featured']);
+    Route::get('/tools/popular/list', [ToolController::class, 'popular']);
+    Route::post('/tools/{id}/favorite', [ToolController::class, 'toggleFavorite']);
     
+    // Favorites routes
+    Route::get('/favorites', [FavoriteController::class, 'index']);
+    Route::post('/favorites', [FavoriteController::class, 'store']);
+    Route::delete('/favorites/{tool_id}', [FavoriteController::class, 'destroy']);
+    Route::get('/favorites/{tool_id}/check', [FavoriteController::class, 'check']);
+
     // Videos routes
     Route::get('/videos', [VideoController::class, 'index']);
     Route::get('/videos/{id}', [VideoController::class, 'show']);
-    
+
     // Quiz routes
-    Route::get('/quizzes', [QuizController::class, 'index']); // ?level=mudah|sedang|sulit
-    Route::post('/quizzes/submit', [QuizController::class, 'submit']);
-    
+    Route::get('/quizzes/{level}', [QuizController::class, 'getQuizzesByLevel']); // level: easy|medium|hard
+    Route::post('/quizzes/submit', [QuizController::class, 'submitQuiz']);
+    Route::get('/quizzes/history/user', [QuizController::class, 'getQuizHistory']);
+    Route::get('/quizzes/stats/user', [QuizController::class, 'getQuizStats']);
+
     // Score routes
     Route::get('/scores', [ScoreController::class, 'index']); // ?level=mudah|sedang|sulit
     Route::post('/scores', [ScoreController::class, 'store']);
     Route::get('/scores/{id}', [ScoreController::class, 'show']);
-    
+
     // Dashboard statistics
     Route::get('/dashboard/stats', [ScoreController::class, 'dashboardStats']);
     Route::get('/leaderboard', [ScoreController::class, 'leaderboard']);

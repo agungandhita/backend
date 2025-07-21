@@ -20,6 +20,14 @@
                 </a>
             </li>
 
+            <!-- Categories Management -->
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.categories.index') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded {{ request()->routeIs('admin.categories.*') ? 'bg-primary text-white' : 'text-dark' }}">
+                    <i class="fas fa-tags me-2"></i>
+                    Kelola Kategori
+                </a>
+            </li>
+
             <!-- Tools Management -->
             <li class="nav-item mb-2">
                 <a href="{{ route('admin.tools.index') }}" class="nav-link d-flex align-items-center py-2 px-3 rounded {{ request()->routeIs('admin.tools.*') ? 'bg-primary text-white' : 'text-dark' }}">

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ToolController;
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\ScoreController;
+use App\Http\Controllers\Admin\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // User Management
     Route::resource('users', UserController::class);
+
+    // Category Management
+    Route::resource('categories', CategoryController::class);
 
     // Tool Management
     Route::resource('tools', ToolController::class);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tool;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,8 +15,46 @@ class ToolController extends Controller
      */
     public function index()
     {
-        $tools = Tool::latest()->paginate(10);
-        return view('admin.tools.index', compact('tools'));
+        $tools = Tool::with('category')
+            ->when(request('search'), function($query) {
+                $query->where('nama', 'LIKE', '%' . request('search') . '%')
+                      ->orWhere('deskripsi', 'LIKE', '%' . request('search') . '%')
+                      ->orWhere('fungsi', 'LIKE', '%' . request('search') . '%');
+            })
+            ->when(request('category'), function($query) {
+                $query->where('category_id', request('category'));
+            })
+            ->when(request('featured') !== null, function($query) {
+                $query->where('is_featured', request('featured'));
+            })
+            ->when(request('status') !== null, function($query) {
+                $query->where('is_active', request('status'));
+            })
+            ->when(request('sort'), function($query) {
+                switch(request('sort')) {
+                    case 'nama_asc':
+                        $query->orderBy('nama', 'asc');
+                        break;
+                    case 'nama_desc':
+                        $query->orderBy('nama', 'desc');
+                        break;
+                    case 'popular':
+                        $query->orderBy('views_count', 'desc');
+                        break;
+                    case 'oldest':
+                        $query->orderBy('created_at', 'asc');
+                        break;
+                    default:
+                        $query->latest();
+                }
+            }, function($query) {
+                $query->latest();
+            })
+            ->paginate(12);
+            
+        $categories = Category::orderBy('nama')->get();
+        
+        return view('admin.tools.index', compact('tools', 'categories'));
     }
 
     /**
@@ -23,7 +62,8 @@ class ToolController extends Controller
      */
     public function create()
     {
-        return view('admin.tools.create');
+        $categories = Category::orderBy('nama')->get();
+        return view('admin.tools.create', compact('categories'));
     }
 
     /**
@@ -35,12 +75,19 @@ class ToolController extends Controller
             'nama' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'fungsi' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'url_video' => 'nullable|url',
             'file_pdf' => 'nullable|file|mimes:pdf|max:10240',
+            'tags' => 'nullable|string',
+            'is_featured' => 'boolean',
+            'is_active' => 'boolean',
         ]);
 
         $data = $request->all();
+        $data['is_featured'] = $request->has('is_featured');
+        $data['is_active'] = $request->has('is_active') ? true : true; // Default active
+        $data['views_count'] = 0;
 
         // Handle file upload
         if ($request->hasFile('gambar')) {
@@ -71,7 +118,8 @@ class ToolController extends Controller
      */
     public function edit(Tool $tool)
     {
-        return view('admin.tools.edit', compact('tool'));
+        $categories = Category::orderBy('nama')->get();
+        return view('admin.tools.edit', compact('tool', 'categories'));
     }
 
     /**
@@ -83,12 +131,18 @@ class ToolController extends Controller
             'nama' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'fungsi' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'url_video' => 'nullable|url',
             'file_pdf' => 'nullable|file|mimes:pdf|max:10240',
+            'tags' => 'nullable|string',
+            'is_featured' => 'boolean',
+            'is_active' => 'boolean',
         ]);
 
-        $data = $request->all();
+        $data = $request->except(['_token', '_method']);
+        $data['is_featured'] = $request->has('is_featured');
+        $data['is_active'] = $request->has('is_active');
 
         // Handle file upload
         if ($request->hasFile('gambar')) {
