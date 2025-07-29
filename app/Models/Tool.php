@@ -17,8 +17,6 @@ class Tool extends Model
         'url_video',
         'file_pdf',
         'kategori',
-        'views_count',
-        'is_featured',
         'is_active',
         'tags',
         'category_id'
@@ -27,10 +25,8 @@ class Tool extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'is_featured' => 'boolean',
         'is_active' => 'boolean',
-        'tags' => 'array',
-        'views_count' => 'integer'
+        'tags' => 'array'
     ];
 
     public function category()
@@ -38,35 +34,16 @@ class Tool extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
 
-    public function favoritedBy()
-    {
-        return $this->belongsToMany(User::class, 'favorites');
-    }
 
-    public function incrementViews()
-    {
-        $this->increment('views_count');
-    }
 
-    public function scopeFeatured($query)
-    {
-        return $query->where('is_featured', true);
-    }
 
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    public function scopePopular($query)
-    {
-        return $query->orderBy('views_count', 'desc');
-    }
+
 
     public function scopeByCategory($query, $categoryId)
     {

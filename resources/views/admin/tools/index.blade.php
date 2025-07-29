@@ -33,14 +33,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-2">
-                <label for="featured" class="form-label">Featured</label>
-                <select class="form-select" id="featured" name="featured">
-                    <option value="">Semua</option>
-                    <option value="1" {{ request('featured') == '1' ? 'selected' : '' }}>Featured</option>
-                    <option value="0" {{ request('featured') == '0' ? 'selected' : '' }}>Non-Featured</option>
-                </select>
-            </div>
+
             <div class="col-md-2">
                 <label for="status" class="form-label">Status</label>
                 <select class="form-select" id="status" name="status">
@@ -115,9 +108,6 @@
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <h5 class="card-title mb-0">{{ $tool->nama }}</h5>
                         <div>
-                            @if($tool->is_featured)
-                                <span class="badge bg-warning text-dark">Featured</span>
-                            @endif
                             @if($tool->is_active)
                                 <span class="badge bg-success">Aktif</span>
                             @else

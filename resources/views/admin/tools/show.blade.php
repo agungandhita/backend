@@ -45,9 +45,7 @@
                                 @else
                                     <span class="badge bg-secondary"><i class="fas fa-times-circle me-1"></i>Tidak Aktif</span>
                                 @endif
-                                @if($tool->is_featured)
-                                    <span class="badge bg-warning text-dark ms-1"><i class="fas fa-star me-1"></i>Unggulan</span>
-                                @endif
+
                             </div>
                         </div>
 
@@ -100,23 +98,7 @@
                         </div>
                         @endif
 
-                        <div class="mb-3">
-                            <h5 class="text-primary">Statistik</h5>
-                            <div class="row text-center">
-                                <div class="col-6">
-                                    <div class="border rounded p-2">
-                                        <div class="h4 mb-0 text-primary">{{ number_format($tool->views_count ?? 0) }}</div>
-                                        <small class="text-muted">Views</small>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="border rounded p-2">
-                                        <div class="h4 mb-0 text-danger">{{ $tool->favorites_count ?? 0 }}</div>
-                                        <small class="text-muted">Favorites</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
 
                         <div class="mb-3">
                             <h5 class="text-primary">Informasi</h5>

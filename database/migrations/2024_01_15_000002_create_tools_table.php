@@ -19,6 +19,10 @@ return new class extends Migration
             $table->text('fungsi');
             $table->string('url_video')->nullable();
             $table->string('file_pdf')->nullable();
+            $table->string('kategori')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->json('tags')->nullable();
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }

@@ -125,31 +125,15 @@
                         @enderror
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" value="1"
-                                           {{ old('is_featured', $tool->is_featured) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_featured">
-                                        <i class="fas fa-star text-warning me-1"></i>Alat Unggulan
-                                    </label>
-                                </div>
-                                <div class="form-text">Tampilkan di daftar alat unggulan</div>
-                            </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1"
+                                   {{ old('is_active', $tool->is_active) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="is_active">
+                                <i class="fas fa-check-circle text-success me-1"></i>Status Aktif
+                            </label>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1"
-                                           {{ old('is_active', $tool->is_active) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_active">
-                                        <i class="fas fa-check-circle text-success me-1"></i>Status Aktif
-                                    </label>
-                                </div>
-                                <div class="form-text">Alat dapat dilihat oleh pengguna</div>
-                            </div>
-                        </div>
+                        <div class="form-text">Alat dapat dilihat oleh pengguna</div>
                     </div>
                 </div>
 
@@ -181,9 +165,7 @@
                     @else
                         <span class="badge bg-secondary"><i class="fas fa-times-circle me-1"></i>Tidak Aktif</span>
                     @endif
-                    @if($tool->is_featured)
-                        <span class="badge bg-warning text-dark ms-1"><i class="fas fa-star me-1"></i>Unggulan</span>
-                    @endif
+
                 </div>
                 
                 <div class="mb-3">

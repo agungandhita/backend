@@ -23,8 +23,6 @@ class ToolResource extends JsonResource
             'url_video' => $this->url_video,
             'file_pdf' => $this->file_pdf ? asset('storage/pdfs/' . $this->file_pdf) : null,
             'kategori' => $this->kategori,
-            'views_count' => $this->views_count,
-            'is_featured' => $this->is_featured,
             'is_active' => $this->is_active,
             'tags' => $this->tags,
             'category_id' => $this->category_id,

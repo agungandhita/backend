@@ -30,7 +30,7 @@ class StoreToolRequest extends FormRequest
             'file_pdf' => 'nullable|mimes:pdf|max:10240', // 10MB
             'kategori' => 'nullable|string|max:100',
             'category_id' => 'nullable|exists:categories,id',
-            'is_featured' => 'boolean',
+
             'is_active' => 'boolean',
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:50',

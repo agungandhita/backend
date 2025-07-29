@@ -93,33 +93,16 @@
                             @enderror
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" 
-                                               id="is_featured" name="is_featured" value="1" 
-                                               {{ old('is_featured') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="is_featured">
-                                            Tool Featured
-                                        </label>
-                                    </div>
-                                    <small class="form-text text-muted">Tool akan ditampilkan di halaman utama</small>
-                                </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" 
+                                       id="is_active" name="is_active" value="1" 
+                                       {{ old('is_active', true) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_active">
+                                    Tool Aktif
+                                </label>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" 
-                                               id="is_active" name="is_active" value="1" 
-                                               {{ old('is_active', true) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="is_active">
-                                            Tool Aktif
-                                        </label>
-                                    </div>
-                                    <small class="form-text text-muted">Tool dapat diakses oleh pengguna</small>
-                                </div>
-                            </div>
+                            <small class="form-text text-muted">Tool dapat diakses oleh pengguna</small>
                         </div>
                     </div>
                     

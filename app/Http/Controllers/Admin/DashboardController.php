@@ -25,7 +25,7 @@ class DashboardController extends Controller
             'total_categories' => Category::count(),
             'total_tools' => Tool::count(),
             'active_tools' => Tool::where('is_active', true)->count(),
-            'featured_tools' => Tool::where('is_featured', true)->count(),
+
             'total_videos' => Video::count(),
             'total_quizzes' => Quiz::count(),
             'total_scores' => Score::count(),

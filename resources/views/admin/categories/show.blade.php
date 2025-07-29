@@ -124,9 +124,6 @@
                                             
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div>
-                                                    @if($tool->is_featured)
-                                                        <span class="badge bg-warning text-dark">Featured</span>
-                                                    @endif
                                                     @if($tool->is_active)
                                                         <span class="badge bg-success">Aktif</span>
                                                     @else

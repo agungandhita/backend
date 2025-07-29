@@ -24,9 +24,7 @@ class ToolController extends Controller
             ->when(request('category'), function($query) {
                 $query->where('category_id', request('category'));
             })
-            ->when(request('featured') !== null, function($query) {
-                $query->where('is_featured', request('featured'));
-            })
+
             ->when(request('status') !== null, function($query) {
                 $query->where('is_active', request('status'));
             })
@@ -38,9 +36,7 @@ class ToolController extends Controller
                     case 'nama_desc':
                         $query->orderBy('nama', 'desc');
                         break;
-                    case 'popular':
-                        $query->orderBy('views_count', 'desc');
-                        break;
+
                     case 'oldest':
                         $query->orderBy('created_at', 'asc');
                         break;
@@ -80,14 +76,14 @@ class ToolController extends Controller
             'url_video' => 'nullable|url',
             'file_pdf' => 'nullable|file|mimes:pdf|max:10240',
             'tags' => 'nullable|string',
-            'is_featured' => 'boolean',
+
             'is_active' => 'boolean',
         ]);
 
         $data = $request->all();
-        $data['is_featured'] = $request->has('is_featured');
+
         $data['is_active'] = $request->has('is_active') ? true : true; // Default active
-        $data['views_count'] = 0;
+
 
         // Handle file upload
         if ($request->hasFile('gambar')) {
@@ -136,12 +132,12 @@ class ToolController extends Controller
             'url_video' => 'nullable|url',
             'file_pdf' => 'nullable|file|mimes:pdf|max:10240',
             'tags' => 'nullable|string',
-            'is_featured' => 'boolean',
+
             'is_active' => 'boolean',
         ]);
 
         $data = $request->except(['_token', '_method']);
-        $data['is_featured'] = $request->has('is_featured');
+
         $data['is_active'] = $request->has('is_active');
 
         // Handle file upload

@@ -146,8 +146,8 @@ class ScoreController extends Controller
                 'best_score' => $levelScores->max('skor') ?? 0,
                 'total_correct' => $levelScores->sum('benar'),
                 'total_questions' => $levelScores->sum('total_soal'),
-                'accuracy' => $levelScores->sum('total_soal') > 0 
-                    ? round(($levelScores->sum('benar') / $levelScores->sum('total_soal')) * 100, 2) 
+                'accuracy' => $levelScores->sum('total_soal') > 0
+                    ? round(($levelScores->sum('benar') / $levelScores->sum('total_soal')) * 100, 2)
                     : 0
             ];
         }
@@ -168,8 +168,8 @@ class ScoreController extends Controller
                     'best_score' => $bestScore,
                     'total_correct_answers' => $totalCorrectAnswers,
                     'total_questions' => $totalQuestions,
-                    'overall_accuracy' => $totalQuestions > 0 
-                        ? round(($totalCorrectAnswers / $totalQuestions) * 100, 2) 
+                    'overall_accuracy' => $totalQuestions > 0
+                        ? round(($totalCorrectAnswers / $totalQuestions) * 100, 2)
                         : 0
                 ],
                 'by_level' => $levelStats,
@@ -251,24 +251,24 @@ class ScoreController extends Controller
         $totalVideos = \App\Models\Video::count();
         $totalQuizzes = \App\Models\Quiz::count();
         $totalScores = Score::count();
-        
+
         // Quiz statistics by level
         $quizByLevel = \App\Models\Quiz::selectRaw('level, COUNT(*) as count')
             ->groupBy('level')
             ->pluck('count', 'level')
             ->toArray();
-            
+
         // Score statistics by level
         $scoresByLevel = Score::selectRaw('level, COUNT(*) as total_attempts, AVG(skor) as avg_score')
             ->groupBy('level')
             ->get()
             ->keyBy('level')
             ->toArray();
-            
+
         // Recent activity (last 7 days)
         $recentScores = Score::where('created_at', '>=', now()->subDays(7))->count();
         $recentUsers = User::where('created_at', '>=', now()->subDays(7))->count();
-        
+
         // Top performing users
         $topUsers = User::select('users.id', 'users.name', 'users.kelas')
             ->join('scores', 'users.id', '=', 'scores.user_id')
@@ -278,7 +278,7 @@ class ScoreController extends Controller
             ->orderByDesc('avg_score')
             ->limit(5)
             ->get();
-            
+
         return response()->json([
             'success' => true,
             'message' => 'App statistics retrieved successfully',

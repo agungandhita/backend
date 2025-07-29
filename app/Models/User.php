@@ -60,29 +60,7 @@ class User extends Authenticatable
         return $this->hasMany(Score::class);
     }
 
-    /**
-     * Relasi ke Favorites
-     */
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
 
-    /**
-     * Relasi ke Tools melalui Favorites
-     */
-    public function favoriteTools()
-    {
-        return $this->belongsToMany(Tool::class, 'favorites');
-    }
-
-    /**
-     * Check if user has favorited a tool
-     */
-    public function hasFavorited($toolId)
-    {
-        return $this->favorites()->where('tool_id', $toolId)->exists();
-    }
 
     /**
      * Update last login timestamp
