@@ -21,7 +21,7 @@ class ToolController extends Controller
             $search = $request->get('search');
             $category = $request->get('category');
             $categoryId = $request->get('category_id');
-            $sortBy = $request->get('sort_by', 'latest'); // latest, popular, name
+            $sortBy = $request->get('sort_by') ?? $request->get('sort', 'latest'); // latest, popular, name
 
             $query = Tool::with(['category'])->active();
 
@@ -44,7 +44,8 @@ class ToolController extends Controller
             // Sorting
             switch ($sortBy) {
                 case 'popular':
-                    $query->popular();
+                    // Sort by name as fallback since popular scope doesn't exist
+                    $query->orderBy('nama', 'asc');
                     break;
                 case 'name':
                     $query->orderBy('nama', 'asc');

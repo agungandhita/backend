@@ -17,23 +17,17 @@ class ToolResource extends JsonResource
         return [
             'id' => $this->id,
             'nama' => $this->nama,
-            'gambar' => $this->gambar ? asset('storage/tools/' . $this->gambar) : null,
+            'gambar' => $this->gambar ? asset('storage/' . $this->gambar) : null,
             'deskripsi' => $this->deskripsi,
             'fungsi' => $this->fungsi,
             'url_video' => $this->url_video,
-            'file_pdf' => $this->file_pdf ? asset('storage/pdfs/' . $this->file_pdf) : null,
+            'file_pdf' => $this->file_pdf ? asset('storage/' . $this->file_pdf) : null,
             'kategori' => $this->kategori,
             'is_active' => $this->is_active,
             'tags' => $this->tags,
             'category_id' => $this->category_id,
             'category' => new CategoryResource($this->whenLoaded('category')),
-            'is_favorited' => $this->when(
-                auth()->check(),
-                function () {
-                    return $this->favoritedBy->contains(auth()->id());
-                },
-                false
-            ),
+            'is_favorited' => false, // Feature not implemented yet
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];

@@ -27,6 +27,18 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
+// Categories routes (read-only, public access)
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{id}', [CategoryController::class, 'show']);
+
+// Tools routes (read-only, public access)
+Route::get('/tools', [ToolController::class, 'index']);
+Route::get('/tools/{id}', [ToolController::class, 'show']);
+
+// Videos routes (public access)
+Route::get('/videos', [VideoController::class, 'index']);
+Route::get('/videos/{id}', [VideoController::class, 'show']);
+
 // Protected routes (require authentication)
 Route::middleware('auth:sanctum')->group(function () {
     // Auth routes
@@ -34,18 +46,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
     Route::put('/profile', [AuthController::class, 'updateProfile']);
     Route::put('/change-password', [AuthController::class, 'changePassword']);
-
-    // Categories routes (read-only)
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/{id}', [CategoryController::class, 'show']);
-
-    // Tools routes (read-only)
-    Route::get('/tools', [ToolController::class, 'index']);
-    Route::get('/tools/{id}', [ToolController::class, 'show']);
-
-    // Videos routes
-    Route::get('/videos', [VideoController::class, 'index']);
-    Route::get('/videos/{id}', [VideoController::class, 'show']);
 
     // Quiz routes
     Route::get('/quizzes/{level}', [QuizController::class, 'getQuizzesByLevel']);
