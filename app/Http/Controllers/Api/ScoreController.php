@@ -89,7 +89,7 @@ class ScoreController extends Controller
             'benar' => $request->benar,
             'salah' => $request->salah,
             'level' => $request->level,
-            'tanggal' => now()
+            'tanggal' => now()->format('Y-m-d H:i:s')
         ]);
 
         return response()->json([

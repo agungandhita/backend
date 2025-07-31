@@ -107,7 +107,7 @@ class QuizController extends Controller
                 'benar' => $correctAnswers,
                 'salah' => $incorrectAnswers,
                 'level' => $level,
-                'tanggal' => now()
+                'tanggal' => now()->format('Y-m-d H:i:s')
             ]);
 
             return response()->json([
@@ -161,7 +161,7 @@ class QuizController extends Controller
                     'total_questions' => $score->total_soal,
                     'level' => $score->level,
                     'grade' => $this->getGrade($score->skor),
-                    'date' => $score->tanggal,
+                    'date' => $score->tanggal->format('Y-m-d H:i:s'),
                     'created_at' => $score->created_at->format('Y-m-d H:i:s')
                 ];
             });

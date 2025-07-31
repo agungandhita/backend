@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('scores', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('skor');
+            $table->decimal('skor', 5, 2);
             $table->integer('total_soal');
             $table->integer('benar');
             $table->integer('salah');
