@@ -107,7 +107,7 @@ class QuizController extends Controller
                 'benar' => $correctAnswers,
                 'salah' => $incorrectAnswers,
                 'level' => $level,
-                'tanggal' => now()->format('Y-m-d')
+                'tanggal' => now()
             ]);
 
             return response()->json([

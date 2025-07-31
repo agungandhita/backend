@@ -10,7 +10,7 @@
                 <!-- Logo and Title -->
                 <div class="text-center mb-4">
                     <div class="logo-container">
-                        <img src="{{ asset('img/logo.jpeg') }}" alt="Konveksi Surabaya Logo" class="img-fluid">
+                        <img src="{{ asset('img/logo.jpeg') }}" alt="E-Jarkom Surabaya Logo" class="img-fluid">
                     </div>
                     <h2 class="fw-bold text-dark mb-2">Admin E-Jarkom</h2>
                     <p class="text-muted mb-0">Daftar akun baru</p>
