@@ -79,7 +79,10 @@ class QuizController extends Controller
             // Calculate score
             foreach ($answers as $answer) {
                 $quiz = Quiz::find($answer['quiz_id']);
-                $isCorrect = $quiz && $quiz->jawaban_benar === $answer['jawaban'];
+                $userAnswer = $answer['jawaban'];
+
+                // Check if answer is correct (null answers are considered incorrect)
+                $isCorrect = $quiz && $userAnswer !== null && $quiz->jawaban_benar === $userAnswer;
 
                 if ($isCorrect) {
                     $correctAnswers++;
@@ -90,7 +93,7 @@ class QuizController extends Controller
                 $results[] = [
                     'quiz_id' => $quiz->id,
                     'soal' => $quiz->soal,
-                    'jawaban_user' => $answer['jawaban'],
+                    'jawaban_user' => $userAnswer,
                     'jawaban_benar' => $quiz->jawaban_benar,
                     'is_correct' => $isCorrect
                 ];

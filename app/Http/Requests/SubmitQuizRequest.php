@@ -24,7 +24,7 @@ class SubmitQuizRequest extends FormRequest
         return [
             'answers' => 'required|array',
             'answers.*.quiz_id' => 'required|exists:quizzes,id',
-            'answers.*.jawaban' => 'required|in:a,b,c,d',
+            'answers.*.jawaban' => 'nullable|in:a,b,c,d',
             'level' => 'required|in:mudah,sedang,sulit',
         ];
     }
