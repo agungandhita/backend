@@ -19,17 +19,17 @@ class QuizController extends Controller
     public function getQuizzesByLevel(Request $request, $level)
     {
         try {
-            $validLevels = ['easy', 'medium', 'hard'];
-            
+            $validLevels = ['mudah', 'sedang', 'sulit'];
+
             if (!in_array($level, $validLevels)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Invalid level. Must be easy, medium, or hard'
+                    'message' => 'Invalid level. Must be mudah, sedang, or sulit'
                 ], 400);
             }
 
             $limit = $request->get('limit', 5);
-            
+
             $quizzes = Quiz::where('level', $level)
                 ->inRandomOrder()
                 ->limit($limit)
@@ -37,7 +37,7 @@ class QuizController extends Controller
                     'id',
                     'soal',
                     'pilihan_a',
-                    'pilihan_b', 
+                    'pilihan_b',
                     'pilihan_c',
                     'pilihan_d',
                     'level'
@@ -70,23 +70,23 @@ class QuizController extends Controller
             $user = Auth::user();
             $answers = $request->answers;
             $level = $request->level;
-            
+
             $totalQuestions = count($answers);
             $correctAnswers = 0;
             $incorrectAnswers = 0;
             $results = [];
-            
+
             // Calculate score
             foreach ($answers as $answer) {
                 $quiz = Quiz::find($answer['quiz_id']);
                 $isCorrect = $quiz && $quiz->jawaban_benar === $answer['jawaban'];
-                
+
                 if ($isCorrect) {
                     $correctAnswers++;
                 } else {
                     $incorrectAnswers++;
                 }
-                
+
                 $results[] = [
                     'quiz_id' => $quiz->id,
                     'soal' => $quiz->soal,
@@ -95,10 +95,10 @@ class QuizController extends Controller
                     'is_correct' => $isCorrect
                 ];
             }
-            
+
             // Calculate percentage score
             $scorePercentage = ($correctAnswers / $totalQuestions) * 100;
-            
+
             // Save score to database
             $score = Score::create([
                 'user_id' => $user->id,
@@ -112,7 +112,7 @@ class QuizController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Quiz submitted successfully',
+                'message' => 'Kuis disubmit dengan sukses',
                 'data' => [
                     'score_id' => $score->id,
                     'score_percentage' => $scorePercentage,
@@ -142,16 +142,16 @@ class QuizController extends Controller
             $user = Auth::user();
             $perPage = $request->get('per_page', 10);
             $level = $request->get('level');
-            
+
             $query = Score::where('user_id', $user->id)
                 ->orderBy('created_at', 'desc');
-                
+
             if ($level) {
                 $query->where('level', $level);
             }
-            
+
             $scores = $query->paginate($perPage);
-            
+
             $formattedScores = $scores->getCollection()->map(function ($score) {
                 return [
                     'id' => $score->id,
@@ -193,20 +193,20 @@ class QuizController extends Controller
     {
         try {
             $user = Auth::user();
-            
+
             $stats = [
                 'total_quizzes_taken' => Score::where('user_id', $user->id)->count(),
                 'average_score' => Score::where('user_id', $user->id)->avg('skor') ?? 0,
                 'best_score' => Score::where('user_id', $user->id)->max('skor') ?? 0,
                 'by_level' => []
             ];
-            
+
             // Get stats by level
-            $levels = ['easy', 'medium', 'hard'];
+            $levels = ['mudah', 'sedang', 'sulit'];
             foreach ($levels as $level) {
                 $levelScores = Score::where('user_id', $user->id)
                     ->where('level', $level);
-                    
+
                 $stats['by_level'][$level] = [
                     'total_taken' => $levelScores->count(),
                     'average_score' => $levelScores->avg('skor') ?? 0,
